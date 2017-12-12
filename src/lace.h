@@ -14,6 +14,6 @@
 #define BLOCK_SIZE 16
 __constant__ float MIN_STD = 0.1f;
 
-void local_contrast_enhancement(cv::gpu::GpuMat& src,
+void local_contrast_enhancement(const cv::gpu::GpuMat& src,
 	cv::gpu::GpuMat& dst,
 	float sigma_increase);

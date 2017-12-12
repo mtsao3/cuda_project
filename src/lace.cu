@@ -1,5 +1,4 @@
 #include "lace.h"
-
 template<class T>
 __device__ void changeStatistics(const cv::gpu::PtrStepSz<T> src,
 									cv::gpu::PtrStepSz<float> dst,
@@ -117,7 +116,7 @@ __global__ void lace(const cv::gpu::PtrStepSz<unsigned char> src,
 	changeStatistics<unsigned char>(src, dst, means_shared, stds_shared, sigma, tid_x, tid_y, x, y, rows, cols);
 }
 
-void local_contrast_enhancement(cv::gpu::GpuMat& src,
+void local_contrast_enhancement(const cv::gpu::GpuMat& src,
 								cv::gpu::GpuMat& dst,
 								float sigma_increase) 
 {
