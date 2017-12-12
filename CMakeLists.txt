@@ -22,13 +22,13 @@ find_package(OpenCV REQUIRED )
 include_directories(
    ${CUDA_INCLUDES}
    ${CUDA_INCLUDE_DIRS}
-   ${CLARITY_SOURCE_DIR}
    src
 )
 
 # CUDA Target
 cuda_add_executable(${my_target}
-   src/main.cu
+   src/main.cpp
+   src/lace.cu
 )
 
 target_link_libraries(${my_target}

@@ -1,21 +1,4 @@
-// CUDA
-#include "cuda_runtime.h"
-#include <cuda.h>
-#include "device_launch_parameters.h"
-#include <device_functions.h>
-
-#include <stdio.h>
-#include <iostream>
-
-// OpenCV
-#include <opencv2/core/core.hpp>
-#include <opencv2/gpu/gpu.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/core/opengl_interop.hpp>
-
-#define THREADS_PER_WARP 32
-#define BLOCK_SIZE 16
-__constant__ float MIN_STD = 0.1f;
+#include "lace.h"
 
 template<class T>
 __device__ void changeStatistics(const cv::gpu::PtrStepSz<T> src,
@@ -165,44 +148,4 @@ void local_contrast_enhancement(cv::gpu::GpuMat& src,
 	laced.convertTo(intensity, CV_8UC1);
 	cv::gpu::merge(channels, dst);
 	cv::gpu::cvtColor(dst, dst, CV_HSV2BGR);
-}
-
-int main()
-{
-	cudaError_t cudaStatus;
-
-	// Choose which GPU to run on, change this on a multi-GPU system.
-	cudaStatus = cudaSetDevice(0);
-
-	// Read image
-	cv::Mat image = cv::imread("../test.jpg");
-
-	// Resize image so I don't have to worry about edge cases
-	int subtract_rows = image.rows%BLOCK_SIZE;
-	int subtract_cols = image.cols%BLOCK_SIZE;
-	cv::resize(image, image, cv::Size(image.cols - subtract_cols, image.rows - subtract_rows));
-
-	// Place image on GPU
-	cv::gpu::GpuMat gpu_image;
-	gpu_image.upload(image);
-
-	// Create a handle for output
-	cv::gpu::GpuMat laced;
-	
-	// Apply contrast enhancement
-	local_contrast_enhancement(gpu_image, laced, 8.0f);
-
-	// Send data back from GPU to host
-	cv::Mat laced_host;
-	laced.download(laced_host);
-
-	// Display images
-	cv::imwrite("../test_image_laced.jpg", laced_host);
-	cv::imshow("laced", laced_host);
-	cv::imshow("original", image);
-	cv::waitKey(0);
-
-	// Release resources
-	cudaDeviceReset();
-    return 0;
 }
