@@ -1,6 +1,10 @@
 # cuda_project
 JHU GPU Project
 
+# Dependencies
+- OpenCV
+  - Built with CUDA
+
 # Local Area Contrast Enhancement
 In the code here, I attempt to write my own local area contrast enhancement(LACE) algorithm. In my code, I use OpenCV built with CUDA to help assist with some of the helper functions not related to contrast enhancement. For my version of LACE, I change the local standard deviations of the image in attempts to increase contrast. 
 
